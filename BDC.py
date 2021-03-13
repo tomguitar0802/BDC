@@ -1,20 +1,32 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-fig,ax=plt.subplots()
 
-st.title('ブレイクダウンカーブ代行')
+st.title('ブレイクダウンカーブ代行業者')
+st.sidebar.write("【必須項目】")
 Data=st.sidebar.file_uploader('Excelファイル')
-focus_mz=list(map(int,st.sidebar.text_input('m/z').split()))
 collision_energy=list(map(int,st.sidebar.text_input('CE').split()))
-standardization=st.sidebar.checkbox('規格化',value=True)
-graph_title=st.sidebar.text_input('グラフタイトル','Break Down Curve of ')
+focus_mz=list(map(int,st.sidebar.text_input('m/z').split()))
+st.sidebar.write("【オプション機能】")
+standardization=st.sidebar.checkbox('相対化',value=True)
+if standardization==True:
+    kyoudo="Relative Intensity(%)"
+else:
+    kyoudo="Absolute Intensity"
+graph_title=st.sidebar.text_input('グラフタイトル','')
 x_label=st.sidebar.text_input('x軸ラベル','Collision Energy(eV)')
-y_label=st.sidebar.text_input('y軸ラベル','Relative Intensity(%)')
+y_label=st.sidebar.text_input('y軸ラベル',kyoudo)
+FontSize=st.sidebar.slider('フォントサイズ',5,25,15,1)
+yoko=st.sidebar.slider("グラフサイズ横",1.0,10.0,8.0,0.1)
+tate=st.sidebar.slider("グラフサイズ縦",1.0,10.0,6.0,0.1)
+hanrei=st.sidebar.checkbox('凡例グラフ内表示',value=True)
 marker=st.sidebar.checkbox('マーカー',value=True)
+st.sidebar.write("【Excel読込設定】")
 skip_rows=int(st.sidebar.text_input('スキップ','7'))
 mass=st.sidebar.text_input('m/z参照','Mass')
 intensity=st.sidebar.text_input('強度参照','Intensity')
+
+fig,ax=plt.subplots(figsize=(yoko,tate))
 
 DF,mz,Sheet=[],[],[]
 
@@ -46,11 +58,14 @@ if Data is not None:
         else:
             ax.plot(collision_energy,mz[e],label="m/z"+str(focus_mz[e]))
 
-ax.set_xlabel(x_label)
-ax.set_ylabel(y_label)
+ax.set_xlabel(x_label,size=FontSize)
+ax.set_ylabel(y_label,size=FontSize)
 ax.set_xticks(collision_energy)
-ax.set_title(graph_title)
-ax.legend()
+ax.set_title(graph_title,size=FontSize+3)
+ax.ticklabel_format(useOffset=False,useMathText=True)
+if hanrei==True:
+    ax.legend()
+else:
+    ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
 st.pyplot(fig)
-
 
