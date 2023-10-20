@@ -68,4 +68,4 @@ if Path is not None:
 
     #サジェスト
     st.write("サジェストm/z")
-    st,write(sugest)
+    st.write(sugest)
