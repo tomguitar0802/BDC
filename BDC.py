@@ -64,4 +64,4 @@ if Path is not None:
     st.pyplot(fig)
 
     #表の表示
-    st.write(DF)
+    st.table(DF)
