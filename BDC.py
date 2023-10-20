@@ -64,7 +64,7 @@ if Path is not None:
     st.pyplot(fig)
 
     #表の表示
-    st.dataframe(DF)
+    st.table(DF)
 
     #サジェスト
     st.write("サジェストm/z")
